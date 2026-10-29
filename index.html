@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlavorCraft — Random Recipe Generator</title>
+  <meta name="description" content="Discover instant cooking inspiration with FlavorCraft: a random recipe generator featuring delicious breakfast, lunch, dinner, vegetarian, non-vegetarian, and dessert dishes.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ==========================================
+       Navigation Bar
+       ========================================== -->
+  <header class="navbar" role="banner">
+    <div class="container">
+      <a href="#" class="nav-brand" aria-label="FlavorCraft Home">
+        <span class="nav-logo-icon" aria-hidden="true">🌿</span>
+        <div class="nav-title-group">
+          <span class="nav-title">FlavorCraft</span>
+          <span class="nav-subtitle">Random Recipe Generator</span>
+        </div>
+      </a>
+
+      <nav class="nav-actions" aria-label="Main Navigation">
+        <button 
+          id="openFavouritesBtn" 
+          class="btn btn-fav-nav" 
+          aria-haspopup="dialog" 
+          aria-label="View saved favourite recipes"
+        >
+          <span aria-hidden="true">❤️</span>
+          <span>Favourites</span>
+          <span id="favBadge" class="badge-pill" aria-label="0 recipes saved">0</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==========================================
+         Hero & Generator Controls Section
+         ========================================== -->
+    <section class="hero-section" aria-labelledby="heroTitle">
+      <div class="container">
+        <div class="hero-badge">
+          <span>✨</span>
+          <span>Never wonder what to cook again</span>
+        </div>
+
+        <h1 id="heroTitle" class="hero-title">Delicious Homemade Recipes,<br>At the Click of a Button.</h1>
+        <p class="hero-subtitle">
+          Stuck on meal ideas? Select your preference or generate an instant random recipe with full ingredients and step-by-step instructions.
+        </p>
+
+        <!-- Search & Generate Controls -->
+        <div class="hero-controls">
+          <button 
+            id="heroGenerateBtn" 
+            class="btn btn-primary btn-lg" 
+            aria-label="Generate a random recipe"
+          >
+            <span aria-hidden="true">🎲</span>
+            <span>Generate Random Recipe</span>
+          </button>
+
+          <!-- Search Input with Live Dropdown & Action Buttons -->
+          <div class="search-box-wrap">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input 
+              type="text" 
+              id="searchInput" 
+              class="search-input" 
+              placeholder="Search recipes (e.g. Pizza, Pancakes, Salmon)..." 
+              aria-label="Search recipes by name or ingredient"
+              autocomplete="off"
+            >
+            <div class="search-actions-group">
+              <button 
+                id="searchClearBtn" 
+                class="search-clear-btn hidden" 
+                aria-label="Clear search query"
+                title="Clear search"
+                type="button"
+              >
+                ✕
+              </button>
+              <button 
+                id="searchSubmitBtn" 
+                class="search-submit-btn" 
+                aria-label="Search recipes"
+                title="Search recipes"
+                type="button"
+              >
+                Search
+              </button>
+            </div>
+
+            <!-- Instant Live Search Dropdown -->
+            <div 
+              id="searchDropdown" 
+              class="search-dropdown hidden" 
+              role="listbox" 
+              aria-label="Search suggestions"
+            >
+              <!-- Populated via JavaScript -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Filter Tabs -->
+        <div class="category-filter-wrap" role="toolbar" aria-label="Filter recipes by category">
+          <button class="filter-btn active" data-category="all" aria-pressed="true">
+            <span>✨</span> All Recipes
+          </button>
+          <button class="filter-btn" data-category="vegetarian" aria-pressed="false">
+            <span>🌱</span> Vegetarian
+          </button>
+          <button class="filter-btn" data-category="non-vegetarian" aria-pressed="false">
+            <span>🍗</span> Non-Vegetarian
+          </button>
+          <button class="filter-btn" data-category="breakfast" aria-pressed="false">
+            <span>🥞</span> Breakfast
+          </button>
+          <button class="filter-btn" data-category="lunch" aria-pressed="false">
+            <span>🥪</span> Lunch
+          </button>
+          <button class="filter-btn" data-category="dinner" aria-pressed="false">
+            <span>🍲</span> Dinner
+          </button>
+          <button class="filter-btn" data-category="desserts" aria-pressed="false">
+            <span>🍰</span> Desserts
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         Featured Recipe Showcase Section
+         ========================================== -->
+    <section 
+      id="featuredRecipeSection" 
+      class="featured-section" 
+      aria-labelledby="featuredSectionTitle"
+    >
+      <div class="container">
+        <div class="section-label">
+          <h2 id="featuredSectionTitle">
+            <span>🍽️</span>
+            <span>Your Selected Recipe</span>
+          </h2>
+        </div>
+
+        <!-- Featured Recipe Card -->
+        <article id="featuredRecipeCard" class="featured-card" role="region" aria-live="polite">
+          <!-- Left: Recipe Visual & Badges -->
+          <div class="featured-visual">
+            <img 
+              id="featuredImage" 
+              src="" 
+              alt="Recipe showcase" 
+              class="featured-img"
+            >
+            <div class="featured-badges">
+              <span id="featuredCategoryBadge" class="badge badge-category">Category</span>
+              <span id="featuredDietaryBadge" class="badge badge-dietary">Dietary</span>
+            </div>
+          </div>
+
+          <!-- Right: Recipe Details & Steps -->
+          <div class="featured-content">
+            <header class="featured-header">
+              <h3 id="featuredTitle" class="featured-title">Recipe Name</h3>
+              <p id="featuredDescription" class="featured-desc">Recipe short description.</p>
+            </header>
+
+            <!-- Quick Metadata Metrics -->
+            <div class="quick-meta-grid" aria-label="Recipe statistics">
+              <div class="meta-box">
+                <span class="meta-icon" aria-hidden="true">⏱️</span>
+                <span class="meta-label">Prep Time</span>
+                <span id="featuredPrepTime" class="meta-value">15 mins</span>
+              </div>
+              <div class="meta-box">
+                <span class="meta-icon" aria-hidden="true">🍳</span>
+                <span class="meta-label">Cook Time</span>
+                <span id="featuredCookTime" class="meta-value">20 mins</span>
+              </div>
+              <div class="meta-box">
+                <span class="meta-icon" aria-hidden="true">👥</span>
+                <span class="meta-label">Yield</span>
+                <span id="featuredServings" class="meta-value">4 Servings</span>
+              </div>
+              <div class="meta-box">
+                <span class="meta-icon" aria-hidden="true">📊</span>
+                <span class="meta-label">Level</span>
+                <span id="featuredDifficulty" class="meta-value">Easy</span>
+              </div>
+            </div>
+
+            <!-- Ingredients Checklist -->
+            <div class="recipe-section-block">
+              <h4 class="block-title">
+                <span aria-hidden="true">🛒</span>
+                <span>Ingredients Checklist</span>
+              </h4>
+              <ul id="featuredIngredients" class="ingredients-list" aria-label="Ingredients required">
+                <!-- Injected via JavaScript -->
+              </ul>
+            </div>
+
+            <!-- Step-by-Step Cooking Instructions -->
+            <div class="recipe-section-block">
+              <h4 class="block-title">
+                <span aria-hidden="true">👩‍🍳</span>
+                <span>Step-by-Step Instructions</span>
+              </h4>
+              <ol id="featuredInstructions" class="instructions-list" aria-label="Cooking instructions">
+                <!-- Injected via JavaScript -->
+              </ol>
+            </div>
+
+            <!-- Action Controls -->
+            <div class="featured-footer-actions">
+              <button 
+                id="featuredFavBtn" 
+                class="btn btn-fav-toggle" 
+                aria-label="Add to favourites"
+              >
+                <span class="icon" aria-hidden="true">🤍</span>
+                <span class="text">Add to Favourites</span>
+              </button>
+
+              <button 
+                id="nextRecipeBtn" 
+                class="btn btn-next-recipe" 
+                aria-label="Show another recipe"
+              >
+                <span aria-hidden="true">🎲</span>
+                <span>Next Recipe</span>
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Empty State for Featured Section (Shown when no recipes match selected category) -->
+        <div id="featuredEmptyState" class="empty-state hidden" role="status">
+          <div class="empty-icon" aria-hidden="true">🍽️</div>
+          <h3 id="featuredEmptyTitle" class="empty-title">No recipes found in this category</h3>
+          <p id="featuredEmptyText" class="empty-desc">Try clearing your search or switching to another category.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         Explore & Search Results Grid Section
+         ========================================== -->
+    <section 
+      id="exploreSection" 
+      class="explore-section" 
+      aria-labelledby="exploreSectionTitle"
+    >
+      <div class="container">
+        <header class="explore-header">
+          <div class="explore-title-wrap">
+            <h2 id="exploreSectionTitle">Browse All Recipes</h2>
+            <p id="resultsCount" class="results-count" aria-live="polite">Showing 18 recipes</p>
+          </div>
+        </header>
+
+        <!-- Empty State (Shown when search/filter has 0 results) -->
+        <div id="emptyState" class="empty-state hidden" role="status">
+          <div class="empty-icon" aria-hidden="true">🔍</div>
+          <h3 class="empty-title">No Recipes Found</h3>
+          <p id="emptyStateQuery" class="empty-desc">We couldn't find any recipes matching your current filter.</p>
+          <button id="resetSearchBtn" class="btn btn-primary btn-sm">
+            <span>Show All Recipes</span>
+          </button>
+        </div>
+
+        <!-- Recipes Grid -->
+        <div id="recipesGrid" class="recipes-grid" aria-label="Recipe collection">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================
+       Favourites Modal Dialog
+       ========================================== -->
+  <div 
+    id="favouritesModal" 
+    class="modal" 
+    role="dialog" 
+    aria-modal="true" 
+    aria-labelledby="modalTitle" 
+    aria-hidden="true"
+  >
+    <div id="modalBackdrop" class="modal-backdrop"></div>
+    <div class="modal-dialog">
+      <header class="modal-header">
+        <h3 id="modalTitle" class="modal-title">
+          <span aria-hidden="true">❤️</span>
+          <span>My Favourite Recipes</span>
+        </h3>
+        <button 
+          id="closeFavouritesModal" 
+          class="modal-close-btn" 
+          aria-label="Close favourites modal"
+        >
+          ✕
+        </button>
+      </header>
+
+      <div class="modal-body">
+        <!-- Empty Favorites State -->
+        <div id="modalEmptyState" class="empty-state hidden">
+          <div class="empty-icon" aria-hidden="true">🍳</div>
+          <h4 class="empty-title">No Favourites Saved Yet</h4>
+          <p class="empty-desc">Click the heart button on any recipe card to save your favourite meals here!</p>
+          <button id="modalExploreBtn" class="btn btn-secondary btn-sm">
+            <span>Discover Recipes</span>
+          </button>
+        </div>
+
+        <!-- Saved Favourites List Container -->
+        <div id="modalFavouritesList" class="fav-list-wrap">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       Toast Notification Element
+       ========================================== -->
+  <div id="toast" class="toast" role="status" aria-live="polite">
+    Recipe added to favourites!
+  </div>
+
+  <!-- ==========================================
+       Footer
+       ========================================== -->
+  <footer class="app-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-content">
+        <div>
+          <div class="footer-brand">🌿 FlavorCraft</div>
+          <p class="footer-desc">Delicious, chef-inspired meals made simple with vanilla web technologies.</p>
+        </div>
+        <p class="footer-copy">© 2026 FlavorCraft • Pure HTML5, CSS3, & JavaScript</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Logic -->
+  <script src="script.js"></script>
+</body>
+</html>
